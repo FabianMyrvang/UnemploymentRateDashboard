@@ -286,7 +286,7 @@ app.layout = html.Div([
         html.Div([
             html.H3("Inflation for regions"),
             dcc.Graph(figure=fig_regions, style={'height': '400px'})
-        ], style={'flex': '1', 'margin-right': '10px'}),
+        ], style={'flex': '1', 'margin-right': '10px',  'margin-top':'45px'}),
 
         # Top 10 unemployment
         html.Div([
@@ -300,15 +300,26 @@ app.layout = html.Div([
             dcc.Dropdown(
                 id='year-dropdown',
                 options=[{'label': y, 'value': y} for y in df_country['year'].unique()],
-                value=2022,
+                value=2024,
                 placeholder='Select a year',
                 style={'width': '100%', 'color': 'black', 'margin-bottom': '10px'}
             ),
             dcc.Graph(id='top-10-barplot', style={'height': '400px'})
         ], style={'flex': '1', 'margin-left': '10px'})
     ], style={'display': 'flex', 'margin-bottom': '30px'}),
-
-    # Row 2: Unemployment map
+    # Row 2: Country-level line graph
+    html.Div([
+        dcc.Dropdown(
+            id='country-dropdown',
+            options=[{'label': c, 'value': c} for c in df_country['country'].unique()],
+            value=None,
+            placeholder='Select a country',
+            style={'width': '40%', 'color': 'black', 'margin-bottom': '10px'}
+        ),
+        dcc.Graph(id='line-graph', style={'height': '400px'})
+    ]),
+    
+    # Row 3: Unemployment map
     html.Div([
         dcc.Graph(id='unemployment-map', style={'height': '500px'}),
         dcc.Slider(
@@ -319,19 +330,7 @@ app.layout = html.Div([
             marks={str(year): str(year) for year in df_country['year'].unique() if year % 5 == 0},
             step=1
         )
-    ], style={'margin-bottom': '30px'}),
-
-    # Row 3: Country-level line graph
-    html.Div([
-        dcc.Dropdown(
-            id='country-dropdown',
-            options=[{'label': c, 'value': c} for c in df_country['country'].unique()],
-            value=None,
-            placeholder='Select a country',
-            style={'width': '40%', 'color': 'black', 'margin-bottom': '10px'}
-        ),
-        dcc.Graph(id='line-graph', style={'height': '400px'})
-    ])
+    ], style={'margin-bottom': '30px'})
 ], style={'margin': '20px'})  # Outer padding
 
 # ------------------ Callbacks ------------------
@@ -362,7 +361,7 @@ def update_plot_country_inflation(country):
 
 # ------------------ Run App ------------------
 if __name__ == '__main__':
-    app.run(debug=True, port=8059, open_browser=True)  # Dash 3.x+ uses app.run() instead of run_server()
+    app.run(debug=False, port=8051)  # Dash 3.x+ uses app.run() instead of run_server()
 
 # %%
 
